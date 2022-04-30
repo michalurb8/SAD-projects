@@ -32,7 +32,7 @@ clean_data <- function(frame) {
   return(frame);
 }
 
-july = clean_data(read.csv("k_d_7.csv", header=FALSE))
+july = clean_data(read.csv("./proj1/zad1/data/k_d_7.csv", header=FALSE))
 locations = sort(unique(july[,"Nazwa"]))
 
 chosen = c("DOLINA PIĘCIU STAWÓW", "CIESZANÓW", "JAROCIN")
