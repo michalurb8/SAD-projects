@@ -1,5 +1,4 @@
-#WCZYTANIE I PRZYGOTOWANIE DANYCH
-
+# FUNCTION FOR DATA PREPROCESSING
 clean_data <- function(frame) {
   frame = data.frame(lapply(frame, function(x) { gsub("<a3>", "Ł", x) }));
   frame = data.frame(lapply(frame, function(x) { gsub("<8c>", "Ś", x) }));
@@ -32,16 +31,16 @@ clean_data <- function(frame) {
   return(frame);
 }
 
-july = clean_data(read.csv("./proj1/zad1/data/k_d_7.csv", header=FALSE))
-locations = sort(unique(july[,"Nazwa"]))
+data = clean_data(read.csv("./proj1/zad1/data/k_d_7.csv", header=FALSE))
+all_locations = sort(unique(data[,"Nazwa"]))
 
-chosen = c("DOLINA PIĘCIU STAWÓW", "CIESZANÓW", "JAROCIN")
-july = july[july[,"Nazwa"] %in% chosen,]
+chosen_locations = c("DOLINA PIĘCIU STAWÓW", "CIESZANÓW", "POLANA CHOCHOŁOWSKA")
+data_in_chosen = data[data[,"Nazwa"] %in% chosen_locations,]
 
-#ZADANIE 1ai
+# 1ai
 
 boxplot(as.double(Max)~Nazwa,
-        data=july,
+        data=data_in_chosen,
         main="Maximum temperature for each localization",
         xlab="Localization",
         ylab="Degrees Celsius",
@@ -50,12 +49,12 @@ boxplot(as.double(Max)~Nazwa,
         range=0
         )
 
-#ZADANIE 1aii
+# 1aii
 
-july['Wahanie'] = july["Max"] - july["Min"]
+data_in_chosen['Wahanie'] = data_in_chosen["Max"] - data_in_chosen["Min"]
 
 boxplot(as.double(Wahanie)~Nazwa,
-        data=july,
+        data=data_in_chosen,
         main="Day-night temperature difference for each localization",
         xlab="Localization",
         ylab="Degrees Celsius",
@@ -64,12 +63,13 @@ boxplot(as.double(Wahanie)~Nazwa,
         range=0
         )
 
-#ZADANIE 1aiii
+# 1aiii
 
 diffs = data.frame()
-for(loc in chosen)
+for(loc in chosen_locations)
 {
-  diffs = rbind(diffs, data.frame(Nazwa = loc, Różnica = diff(july[july[,"Nazwa"] == loc,"Max"])))
+  new_frame = data.frame(Nazwa = loc, Różnica = diff(data_in_chosen[data_in_chosen[,"Nazwa"] == loc,"Max"]))
+  diffs = rbind(diffs, new_frame)
 }
 
 boxplot(Różnica~Nazwa,
@@ -79,6 +79,27 @@ boxplot(Różnica~Nazwa,
         ylab="Degrees Celsius",
         col="orange",
         border="black",
-        range=0
+        range=0,
+        grid=T
 )
 
+# 1b
+
+location = "GORZYŃ" #### CHOSEN LOCATION FOR 1B
+
+loc_diffs = diff(data[data[,"Nazwa"] == location,"Max"])
+diffs_m = mean(loc_diffs)
+diffs_sd = sd(loc_diffs)
+text = paste("Distribution of temperature difference between consecutive days in",location)
+hist(loc_diffs,
+     probability=T,
+     breaks=20,
+     main=text,
+     xlab="Temperature difference",
+     ylab="Probability"
+)
+curve(dnorm(x, mean=diffs_m, sd=diffs_sd), add=T)
+
+epsilon = 5 #### CHOSEN ERROR VALUE
+sum(abs(loc_diffs) <= epsilon)/length(loc_diffs)
+    
