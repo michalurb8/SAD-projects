@@ -1,14 +1,20 @@
-katastrofy <- read.csv("/Users/user/Downloads/katastrofy.csv")
+katastrofy <- read.csv("./proj1/zad2/katastrofy.csv")
+katastrofy['Year'] <- substr(katastrofy$Date, start=7, stop=10)
+katastrofy['Month'] <- substr(katastrofy$Date, start=1, stop=2)
+katastrofy['Quarter'] <- (as.numeric(substr(katastrofy$Date, start=1, stop=2))-1)%/%3 + 1
+katastrofy['Count'] <- c(1)
+katastrofy <- katastrofy[,c('Year', 'Quarter', 'Count')]
 
-kwartal1 <- subset(katastrofy, substr(katastrofy$Date,1,2) == "01" | substr(katastrofy$Date,1,2) == "02" | substr(katastrofy$Date,1,2) == "03")
-kwartal2 <- subset(katastrofy, substr(katastrofy$Date,1,2) == "04" | substr(katastrofy$Date,1,2) == "05" | substr(katastrofy$Date,1,2) == "06")
-kwartal3 <- subset(katastrofy, substr(katastrofy$Date,1,2) == "07" | substr(katastrofy$Date,1,2) == "08" | substr(katastrofy$Date,1,2) == "09")
-kwartal4 <- subset(katastrofy, substr(katastrofy$Date,1,2) == "10" | substr(katastrofy$Date,1,2) == "11" | substr(katastrofy$Date,1,2) == "12")
+grouped = aggregate(Count ~ Quarter + Year, data=katastrofy, FUN=length)
 
-kwartaly <- c(length(kwartal1[,1]), length(kwartal2[,1]), length(kwartal3[,1]), length(kwartal4[,1]))
+hist(grouped$Count,
+     probability=T,
+     breaks=max(grouped$Count),
+     main="Number of crashes in quarter periods over the years",
+     xlab="Number of crashes",
+     ylab="Probability"
+)
+x = seq(0,max(grouped$Count))
+y = dpois(x, lambda = mean(grouped$Count))
+points(x,y)
 
-barplot(kwartaly, col = c("lightblue", "blue", "lightcyan", 
-                           "lavender"), names.arg = c("Q1","Q2","Q3","Q4"))
-
-
-lata <- split(stosunek, substr(katastrofy$Date,7,10))
