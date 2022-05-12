@@ -25,8 +25,6 @@ barplot(a,
 
 loty <- read.csv("./proj1/zad2/loty.csv")
 colnames(loty)[2] <- "Number"
-loty$Number = loty$Number * 10 ** 6 # Convert back to millions
-loty$Number = loty$Number /100      # Convert to percents
 katastrofyLoty = c()
 katastrofyLoty[1] = liczba_katastrof[[93]] / loty[[2]][1]
 katastrofyLoty[2] = liczba_katastrof[[94]] / loty[[2]][2]
@@ -36,8 +34,8 @@ katastrofyLoty[5] = liczba_katastrof[[97]] / loty[[2]][5]
 katastrofyLoty[6] = liczba_katastrof[[98]] / loty[[2]][6]
 barplot(katastrofyLoty,
         names.arg = c("2004","2005","2006","2007","2008","2009"),
-        main="Estimated probability that a flight ended in a crash",
+        main="Estimated number of crashes per 1M flights",
         xlab="Year",
-        ylab="Estimated probability [%]"
+        ylab="Estimated number of crashes"
         )
 

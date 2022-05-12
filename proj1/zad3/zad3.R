@@ -1,10 +1,19 @@
-katastrofy <- read.csv("/Users/user/Downloads/katastrofy.csv")
+katastrofy <- read.csv("./proj1/zad2/katastrofy.csv")
+katastrofy <- katastrofy[,c("Date", "Type")]
 
-antonov <- subset(katastrofy, substr(katastrofy$Type,1,7) == "Antonov")
-liczba_antonov = length(antonov$Date)
-liczba_wszystkich = length(katastrofy$Date)
-stosunek = liczba_antonov / liczba_wszystkich
+grouped <- aggregate(. ~ substr(Type, 1, 7), data=katastrofy, FUN=length)
+colnames(grouped) <- c("Name", "Count")
+grouped$Name <- tolower(grouped$Name)
+grouped <- grouped[-1,c(1,2)]
 
-slices <- c(liczba_antonov, liczba_wszystkich)
-lbls <- c("Antonov", "Reszta")
-pie(slices, labels = lbls, main="Pie Katastrofy z udziałem samolotów Antonov")
+threshold <- 90
+filtered <- grouped[(grouped[,2] > threshold), ]
+
+pie(filtered$Count,
+    labels = filtered$Name,
+    main=paste("Pie chart of plane type count of crashed planes \n",
+              "Counting only planes with more than",
+              threshold,
+              "crashes")
+    )
+
