@@ -1,5 +1,7 @@
 katastrofy <- read.csv("/Users/user/Downloads/katastrofy.csv")
+stosunek <- 1:5268
 lata <- split(stosunek, substr(katastrofy$Date,7,10))
+liczba_katastrof=lapply(X=lata, FUN=length)
 c <- 1
 a = c()
 b = c()
