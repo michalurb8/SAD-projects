@@ -74,7 +74,7 @@ for(loc in chosen_locations)
 
 boxplot(Różnica~Nazwa,
         data=diffs,
-        main="Difference between days for each localization",
+        main="Temperature difference between consecutive days for each localization",
         xlab="Localization",
         ylab="Degrees Celsius",
         col="orange",
@@ -100,6 +100,6 @@ hist(loc_diffs,
 )
 curve(dnorm(x, mean=diffs_m, sd=diffs_sd), add=T)
 
-epsilon = 5 #### CHOSEN ERROR VALUE
+epsilon = 2 #### CHOSEN ERROR VALUE
 sum(abs(loc_diffs) <= epsilon)/length(loc_diffs)
     
